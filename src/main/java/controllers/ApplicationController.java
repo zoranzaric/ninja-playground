@@ -16,33 +16,51 @@
 
 package controllers;
 
+import ninja.Context;
 import ninja.Result;
 import ninja.Results;
+import ninja.session.Session;
 
-import com.google.inject.Singleton;
+import com.google.inject.Inject;
 
-
-@Singleton
 public class ApplicationController {
 
-    public Result index() {
+  @Inject
+  Context injectedContext;
 
-        return Results.html();
+  public Result index(Context context) {
+    String foo = "";
 
+    if (context.getSession() != null && context.getSession().get("foo") != null) {
+      foo = context.getSession().get("foo");
     }
-    
-    public Result helloWorldJson() {
-        
-        SimplePojo simplePojo = new SimplePojo();
-        simplePojo.content = "Hello World! Hello Json!";
 
-        return Results.json().render(simplePojo);
+    return Results.html().render("foo", foo);
+  }
 
-    }
-    
-    public static class SimplePojo {
+  public Result storeDi() {
+    Session session = injectedContext.getSession();
+    session.put("foo", "bar");
 
-        public String content;
-        
-    }
+    Result result = Results.redirect("/");
+
+    // I would have to do this
+    session.save(injectedContext, result);
+
+    return result;
+  }
+
+  public Result storeNonDi(Session session) {
+    session.put("foo", "bar");
+
+    Result result = Results.redirect("/");
+    return result;
+  }
+
+  public Result clearSession(Session session) {
+    session.clear();
+
+    Result result = Results.redirect("/");
+    return result;
+  }
 }

@@ -2,8 +2,14 @@
 <@layout.myLayout "Home page">    
 
 
-<h1>${i18n("hello.world")}</h1>
-<p>${i18n("hello.world.json")}</p>
-<a href="/hello_world.json">Hello World Json</a>
+<h1>DI Clearification</h1>
+
+<p>Value in session: <strong>${foo}</strong></p>
+
+<ul>
+	<li><a href="/storeDi">Store something in Session (with DI)</a></li>
+	<li><a href="/storeNonDi">Store something in Session (without DI)</a></li>
+	<li><a href="/clearSession">Clear session</a></li>
+</ul>
 
 </@layout.myLayout>

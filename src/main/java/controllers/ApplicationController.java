@@ -18,31 +18,38 @@ package controllers;
 
 import ninja.Result;
 import ninja.Results;
+import ninja.Router;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 
 @Singleton
 public class ApplicationController {
 
-    public Result index() {
+  @Inject
+  Router router;
 
-        return Results.html();
+  public Result index() {
 
-    }
-    
-    public Result helloWorldJson() {
-        
-        SimplePojo simplePojo = new SimplePojo();
-        simplePojo.content = "Hello World! Hello Json!";
+    Result result = Results.html();
+    result.render("indexUrl", router.getReverseRoute(ApplicationController.class, "index"));
+    result.render("jsonUrl", router.getReverseRoute(ApplicationController.class, "helloWorldJson"));
+    return result;
 
-        return Results.json().render(simplePojo);
+  }
 
-    }
-    
-    public static class SimplePojo {
+  public Result helloWorldJson() {
 
-        public String content;
-        
-    }
+    SimplePojo simplePojo = new SimplePojo();
+    simplePojo.content = "Hello World! Hello Json!";
+
+    return Results.json().render(simplePojo);
+
+  }
+
+  public static class SimplePojo {
+
+    public String content;
+
+  }
 }
